@@ -9,6 +9,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://termdx.studio'),
   title: 'termdx — Terminal Developer Experience',
   description:
     'An open source organization building the future of terminal-native developer tools.',
