@@ -1,24 +1,23 @@
-import type { Metadata } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from "next";
+import { JetBrains_Mono } from "next/font/google";
+import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains',
-  display: 'swap',
-})
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://termdx.studio'),
-  title: 'termdx — Terminal Developer Experience',
-  description:
-    'An open source organization building the future of terminal-native developer tools.',
-}
+  metadataBase: new URL("https://termdx.studio"),
+  title: "termdx — Terminal Developer Experience",
+  description: "No mouse required.",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" className={jetbrainsMono.variable}>
@@ -28,5 +27,5 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  )
+  );
 }
