@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --crt-bg: #030403;
+  --crt-green: #33ff00;
+  --crt-green-dim: #1a8000;
+  --crt-green-glow: #4dff1a;
+  --crt-amber: #ffb000;
+  --crt-white: #e0e0e0;
+  --crt-gray: #5a6b5a;
+}
+
+@layer base {
+  html {
+    background-color: var(--crt-bg);
+    color: var(--crt-green);
+    font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--crt-bg);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--crt-green-dim);
+    color: var(--crt-bg);
+  }
+
+  ::-moz-selection {
+    background-color: var(--crt-green-dim);
+    color: var(--crt-bg);
+  }
+}
+
+@layer components {
+  .crt-glow {
+    text-shadow:
+      0 0 2px var(--crt-green),
+      0 0 8px rgba(51, 255, 0, 0.3);
+  }
+
+  .crt-glow-strong {
+    text-shadow:
+      0 0 4px var(--crt-green),
+      0 0 12px rgba(51, 255, 0, 0.25);
+  }
+
+  .crt-border {
+    border: 1px solid var(--crt-green-dim);
+    box-shadow:
+      inset 0 0 20px rgba(51, 255, 0, 0.03),
+      0 0 20px rgba(51, 255, 0, 0.03);
+  }
+
+  .crt-border-b {
+    border-bottom: 1px solid var(--crt-green-dim);
+  }
+
+  .terminal-prompt::before {
+    content: '$ ';
+    color: var(--crt-green-dim);
+  }
+
+  .terminal-comment {
+    color: var(--crt-gray);
+  }
+
+  .terminal-keyword {
+    color: var(--crt-green-glow);
+  }
+
+  .terminal-string {
+    color: var(--crt-amber);
+  }
+}
+
+/* Scanline overlay — simplified for performance */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  background: url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='4' height='2' fill='%23000000' fill-opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.35;
+}
+
+/* Subtle vignette for depth */
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(3, 4, 3, 0.4) 100%
+  );
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--crt-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--crt-green-dim);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--crt-green);
+}
