@@ -19,13 +19,63 @@ export const metadata: Metadata = {
   description:
     "Terminal-native developer tools. No Electron wrappers, no context switching, no leaving the command line. Your RAM sends its thanks.",
   metadataBase: new URL("https://termdx.studio"),
+  applicationName: "TermDX",
+  keywords: [
+    "developer tools",
+    "terminal",
+    "CLI",
+    "command line",
+    "TypeScript",
+    "Rust",
+  ],
+  authors: [{ name: "TermDX" }],
+  creator: "TermDX",
+  publisher: "TermDX",
+  category: "Developer tools",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "TermDX — Sharp tools for sharp developers",
     description:
       "Terminal-native developer tools. No Electron wrappers, no context switching, no leaving the command line.",
     url: "https://termdx.studio",
     siteName: "TermDX",
+    locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "TermDX — Terminal-native developer tools",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TermDX — Sharp tools for sharp developers",
+    description:
+      "Terminal-native developer tools. No Electron wrappers, no context switching, no leaving the command line.",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "TermDX — Terminal-native developer tools",
+      },
+    ],
   },
   icons: { icon: "/logo.png" },
 };
