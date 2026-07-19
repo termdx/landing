@@ -150,11 +150,11 @@ export default function RelayPage() {
             href={DOWNLOAD_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2.5 rounded-[7px] border border-line-strong bg-surface px-5 py-[13px] font-mono text-sm text-ink transition-colors hover:border-ink"
+            className="inline-flex items-center gap-2.5 rounded-[7px] bg-[color:var(--td-accent)] px-5 py-[13px] font-mono text-sm font-medium text-white transition-[filter] hover:brightness-90"
           >
-            <Download className="h-4 w-4 text-[color:var(--td-accent)]" />
+            <Download className="h-4 w-4" />
             Download now
-            <span className="rounded-full border border-line bg-bg px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-[color:var(--td-accent)]">
+            <span className="rounded-full border border-white/35 bg-white/15 px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-white">
               beta
             </span>
           </a>
