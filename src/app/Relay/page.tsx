@@ -150,7 +150,7 @@ export default function RelayPage() {
             href={DOWNLOAD_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2.5 rounded-[7px] bg-[color:var(--td-accent)] px-5 py-[13px] font-mono text-sm font-medium text-white transition-[filter] hover:brightness-90"
+            className="inline-flex items-center gap-2.5 rounded-[7px] bg-[#6d28d9] px-5 py-[13px] font-mono text-sm font-medium text-white transition-[filter] hover:brightness-90"
           >
             <Download className="h-4 w-4" />
             Download now
