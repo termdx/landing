@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { Download, Star } from "lucide-react";
 import Footer from "@/components/Footer";
-import RelayCopyButton from "./copy-button";
+
+const DOWNLOAD_URL =
+  "https://relay.termdx.studio/join/FZ3eWvKYlax2Gm7b-5iWAzMpSdfHz29U";
 
 export const metadata: Metadata = {
   title: "Relay — The operating system for client work",
@@ -144,7 +146,18 @@ export default function RelayPage() {
             <Star className="h-4 w-4" fill="currentColor" strokeWidth={0} /> on
             GitHub
           </a>
-          <RelayCopyButton />
+          <a
+            href={DOWNLOAD_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2.5 rounded-[7px] border border-line-strong bg-surface px-5 py-[13px] font-mono text-sm text-ink transition-colors hover:border-ink"
+          >
+            <Download className="h-4 w-4 text-[color:var(--td-accent)]" />
+            Download now
+            <span className="rounded-full border border-line bg-bg px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-[color:var(--td-accent)]">
+              beta
+            </span>
+          </a>
         </div>
       </header>
 
