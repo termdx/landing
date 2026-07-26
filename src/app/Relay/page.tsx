@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Download, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import Footer from "@/components/Footer";
-
-const DOWNLOAD_URL =
-  "https://relay.termdx.studio/join/FZ3eWvKYlax2Gm7b-5iWAzMpSdfHz29U";
+import WaitlistButton from "@/components/WaitlistButton";
 
 export const metadata: Metadata = {
   title: "Relay — The operating system for client work",
@@ -78,7 +76,7 @@ export default function RelayPage() {
     <div style={RELAY_ACCENT} className="flex min-h-full flex-1 flex-col">
       {/* Nav — mirrors the main Nav; logo returns to termdx.studio */}
       <nav className="sticky top-0 z-10 border-b border-line bg-[rgba(250,250,248,0.88)] backdrop-blur-md">
-        <div className="mx-auto flex h-[60px] max-w-[1060px] items-center justify-between px-7">
+        <div className="mx-auto flex h-15 max-w-265 items-center justify-between px-7">
           <Link href="/" className="flex items-center text-ink">
             <Image
               src="/logo.png"
@@ -102,7 +100,11 @@ export default function RelayPage() {
               rel="noreferrer"
               className="inline-flex items-center gap-[7px] rounded-md border border-line-strong bg-surface px-3.5 py-[7px] font-mono text-[13px] font-medium text-ink transition-colors hover:border-ink"
             >
-              <Star className="h-3.5 w-3.5" fill="currentColor" strokeWidth={0} />{" "}
+              <Star
+                className="h-3.5 w-3.5"
+                fill="currentColor"
+                strokeWidth={0}
+              />{" "}
               on GitHub
             </a>
           </div>
@@ -131,9 +133,9 @@ export default function RelayPage() {
 
         <p className="m-0 mb-9 max-w-[560px] text-[17px] leading-[1.6] text-muted text-pretty">
           The operating system for client work. Relay connects the tools you
-          already ship with into one timeline per client, a knowledge base
-          that answers “where are we?”, and a portal where your clients watch
-          it all happen. AI drafts, you approve.
+          already ship with into one timeline per client, a knowledge base that
+          answers “where are we?”, and a portal where your clients watch it all
+          happen. AI drafts, you approve.
         </p>
 
         <div className="flex flex-wrap justify-center gap-3">
@@ -146,18 +148,7 @@ export default function RelayPage() {
             <Star className="h-4 w-4" fill="currentColor" strokeWidth={0} /> on
             GitHub
           </a>
-          <a
-            href={DOWNLOAD_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2.5 rounded-[7px] border border-faint bg-line px-5 py-[13px] font-mono text-sm text-ink transition-colors hover:border-ink"
-          >
-            <Download className="h-4 w-4 text-[color:var(--td-accent)]" />
-            Download now
-            <span className="rounded-full border border-line bg-bg px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-[color:var(--td-accent)]">
-              beta
-            </span>
-          </a>
+          <WaitlistButton />
         </div>
       </header>
 
