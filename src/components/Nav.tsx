@@ -6,13 +6,17 @@ export default function Nav() {
   return (
     <nav className="sticky top-0 z-10 border-b border-line bg-[rgba(250,250,248,0.88)] backdrop-blur-md">
       <div className="mx-auto flex h-[60px] max-w-[1060px] items-center justify-between px-7">
-        <Link href="#" className="flex items-center text-ink">
+        <Link href="#" className="flex items-center">
+          {/* Wordmark set in Architype Stedelijk, supplied as artwork — the
+              licence covers the font, not the outlines, so no font file ships.
+              Source is 353x39 of pure ink (cropped to the glyph bounds), so
+              rendering at 20px is ~2x for retina. */}
           <Image
-            src="/logo.png"
-            alt="TermDX"
-            width={110}
-            height={54}
-            className="h-[36px] w-auto object-contain"
+            src="/wordmark.png"
+            alt="termdx.studio"
+            width={353}
+            height={39}
+            className="h-[20px] w-auto"
             priority
           />
         </Link>

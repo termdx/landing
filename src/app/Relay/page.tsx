@@ -77,13 +77,13 @@ export default function RelayPage() {
       {/* Nav — mirrors the main Nav; logo returns to termdx.studio */}
       <nav className="sticky top-0 z-10 border-b border-line bg-[rgba(250,250,248,0.88)] backdrop-blur-md">
         <div className="mx-auto flex h-15 max-w-265 items-center justify-between px-7">
-          <Link href="/" className="flex items-center text-ink">
+          <Link href="/" className="flex items-center">
             <Image
-              src="/logo.png"
-              alt="TermDX"
-              width={110}
-              height={54}
-              className="h-[36px] w-auto object-contain"
+              src="/wordmark.png"
+              alt="termdx.studio"
+              width={353}
+              height={39}
+              className="h-[20px] w-auto"
               priority
             />
           </Link>
