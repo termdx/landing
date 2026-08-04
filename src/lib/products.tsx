@@ -48,7 +48,13 @@ export type Product = {
   repoUrl?: string;
   /** Sales/demo call for a product you buy rather than clone. */
   bookUrl?: string;
-  /** GitHub social-preview image. Absent → the card draws its own panel. */
+  /**
+   * GitHub social-preview image. Absent → the card draws its own panel.
+   *
+   * Card artwork on the landing page only, despite the name — the share card
+   * is each route's own opengraph-image.png, and productMetadata deliberately
+   * doesn't reference this.
+   */
   ogImage?: string;
   /** Square mark in /public, shown above the product name in the hero. */
   logo?: string;
@@ -460,7 +466,20 @@ export function productMetadata(product: Product): Metadata {
       url: `https://termdx.studio/${product.slug}`,
       siteName: "TermDX",
       type: "website",
-      ...(product.ogImage ? { images: [{ url: product.ogImage }] } : {}),
+      // No `images` here on purpose: each route ships its own branded
+      // opengraph-image.png, and an explicit entry would beat the file
+      // convention. ogImage stays the card artwork, not the share card.
+    },
+    twitter: {
+      // The root layout points twitter.images at the studio banner, and a
+      // child inherits it — so without this a product page would share its
+      // own og:image but the studio's twitter:image. opengraph-image only
+      // emits og: tags, hence naming the same file again here rather than
+      // shipping a duplicate twitter-image.png per route. metadataBase makes
+      // it absolute.
+      title,
+      description,
+      images: [`/${product.slug}/opengraph-image.png`],
     },
   };
 }
