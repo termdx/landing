@@ -1,14 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "repository-images.githubusercontent.com",
-      },
-    ],
-  },
+  // No images.remotePatterns: the only external artwork (GitHub social
+  // previews) now ships in OG meta tags, not through next/image.
 };
 
 export default nextConfig;

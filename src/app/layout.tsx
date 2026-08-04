@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Sanchez, JetBrains_Mono } from "next/font/google";
+import MotionProvider from "@/components/motion/MotionProvider";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+// Sanchez ships a single 400 face. Nothing set in --font-sans may carry a
+// weight utility: 500 would silently resolve back to 400, and 600+ would make
+// the browser synthesise a faux bold, which smears a slab's stems. Sans
+// hierarchy is built from size, colour, and tracking instead. Italic exists
+// upstream (add `style: ["normal", "italic"]`) but nothing uses it yet.
+const sanchez = Sanchez({
+  variable: "--font-sanchez",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "400",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -77,7 +83,28 @@ export const metadata: Metadata = {
       },
     ],
   },
-  icons: { icon: "/logo.png" },
+};
+
+// Structured data for the studio: who the site belongs to and where it
+// lives. Rendered once here; product pages add their own OG metadata only.
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://termdx.studio/#org",
+      name: "TermDX",
+      url: "https://termdx.studio",
+      logo: "https://termdx.studio/logo.png",
+      sameAs: ["https://github.com/termdx"],
+    },
+    {
+      "@type": "WebSite",
+      url: "https://termdx.studio",
+      name: "TermDX",
+      publisher: { "@id": "https://termdx.studio/#org" },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -88,9 +115,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${sanchez.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        {/* Entrance animations start at opacity 0 and the FAQ panels at
+            height 0. Without JS nothing would ever animate them in, so pin
+            them open for that case. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}[data-faq-panel]{height:auto!important;opacity:1!important}`}</style>
+        </noscript>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col">
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }
