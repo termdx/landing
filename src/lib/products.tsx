@@ -40,7 +40,8 @@ export type Product = {
   slug: string;
   name: string;
   stars?: number;
-  badge: string;
+  /** Category chips on the card — what the thing *is*, not what it's built in. */
+  badges: string[];
   /** Card blurb on the landing page. */
   description: ReactNode;
   /** Public repo. Absent for commercial products — no source to link to. */
@@ -122,7 +123,7 @@ export const products: Product[] = [
     slug: "piper",
     name: "piper",
     stars: 22,
-    badge: "TypeScript",
+    badges: ["API client", "Request Chaining", "CI Test Support"],
     description:
       "Never leave your terminal to test your API again. Postman can keep the mouse.",
     repoUrl: "https://github.com/termdx/piper",
@@ -220,7 +221,7 @@ export const products: Product[] = [
   {
     slug: "codrop",
     name: "codrop",
-    badge: "Rust · MIT",
+    badges: ["Dev Dropbox", "CLI", "Auto Sync Engine"],
     description: (
       <>
         A Dropbox for devs: code, environments, and .envs auto-synced across
@@ -339,9 +340,9 @@ export const products: Product[] = [
   {
     slug: "Relay",
     name: "Relay",
-    badge: "self-hosted · licensed",
+    badges: ["AI workflows", "client management", "orchestration layer"],
     description:
-      "The operating system for client work: one timeline per client, a knowledge base that answers “where are we?”, and a portal your clients actually open.",
+      "The operating system for client work: one timeline per client, a knowledge base that answers “where are we?”, and a portal your clients actually open. AI drafts every update — nothing reaches a client until you approve it.",
     // Commercial and closed-source: no repo to link, a call to book instead.
     bookUrl: "https://cal.com/termdx.studio",
     logo: "/relay-logo.png",

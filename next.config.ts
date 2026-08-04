@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // No images.remotePatterns: the only external artwork (GitHub social
-  // previews) now ships in OG meta tags, not through next/image.
+  images: {
+    // The piper/codrop cards render their GitHub social previews through
+    // next/image; OG meta tags elsewhere don't need this.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "repository-images.githubusercontent.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
