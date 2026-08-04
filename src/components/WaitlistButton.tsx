@@ -1,10 +1,29 @@
 "use client";
 
 import { useCallback, useRef, useState, type FormEvent } from "react";
+import { AnimatePresence, m } from "motion/react";
 
 type Status = "idle" | "sending" | "done" | "error";
 
-export default function WaitlistButton() {
+type Props = {
+  /** Product slug the signup is attributed to (see api/waitlist/route.ts). */
+  product?: string;
+  /** Display name used in the dialog copy. */
+  name?: string;
+  /** "primary" when the waitlist is the page's leading action. */
+  variant?: "primary" | "secondary";
+};
+
+const TRIGGER = {
+  primary: "bg-ink text-bg hover:bg-[color:var(--td-accent)] hover:text-white",
+  secondary: "border border-ink bg-surface text-ink hover:bg-ink hover:text-bg",
+};
+
+export default function WaitlistButton({
+  product = "Relay",
+  name = "Relay",
+  variant = "secondary",
+}: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const [email, setEmail] = useState("");
@@ -29,7 +48,11 @@ export default function WaitlistButton() {
         const response = await fetch("/api/waitlist", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email.trim() }),
+          body: JSON.stringify({
+            email: email.trim(),
+            product,
+            list: "waitlist",
+          }),
         });
 
         if (!response.ok) {
@@ -40,25 +63,29 @@ export default function WaitlistButton() {
         setEmail("");
         setStatus("done");
       } catch (cause) {
-        setError(cause instanceof Error ? cause.message : "Something went wrong.");
+        setError(
+          cause instanceof Error ? cause.message : "Something went wrong.",
+        );
         setStatus("error");
       }
     },
-    [email],
+    [email, product],
   );
 
   const sending = status === "sending";
 
   return (
     <>
-      <button
+      <m.button
         ref={trigger}
         type="button"
         onClick={open}
-        className="inline-flex items-center gap-2 rounded-[7px] border border-ink bg-surface px-[22px] py-[13px] font-mono text-sm font-medium text-ink transition-colors hover:bg-ink hover:text-bg"
+        whileTap={{ scale: 0.97 }}
+        transition={{ duration: 0.12 }}
+        className={`inline-flex items-center gap-2 rounded-[7px] px-[22px] py-[13px] text-sm transition-colors ${TRIGGER[variant]}`}
       >
         Join Waitlist
-      </button>
+      </m.button>
 
       <dialog
         ref={dialog}
@@ -71,34 +98,48 @@ export default function WaitlistButton() {
       >
         <div className="flex flex-col gap-4 px-7 py-7 text-left">
           <div className="flex flex-col gap-2">
-            <span className="font-mono text-[13px] text-[color:var(--td-accent)]">
-              $ relay waitlist --join
+            <span className="text-[13px] text-[color:var(--td-accent)]">
+              $ {product.toLowerCase()} waitlist --join
             </span>
-            <h2
-              id="waitlist-title"
-              className="m-0 text-xl font-semibold tracking-[-0.02em]"
-            >
+            <h2 id="waitlist-title" className="m-0 text-xl tracking-[-0.02em]">
               Get early access
             </h2>
-            <p className="m-0 text-[15px] leading-[1.6] text-muted text-pretty">
-              Drop your email and we’ll tell you the moment Relay is ready to
+            <p className="m-0 text-[15px] leading-[1.6] text-body text-pretty">
+              Drop your email and we’ll tell you the moment {name} is ready to
               run. No noise, no drip campaign.
             </p>
           </div>
 
           {status === "done" ? (
-            <div className="flex flex-col gap-4">
-              <p className="m-0 font-mono text-sm text-[color:var(--td-accent)]">
-                ✓ You’re on the list.
+            <m.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col gap-4"
+            >
+              <p className="m-0 flex items-center gap-2 text-sm text-[color:var(--td-accent)]">
+                <m.span
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    delay: 0.08,
+                    type: "spring",
+                    stiffness: 460,
+                    damping: 18,
+                  }}
+                >
+                  ✓
+                </m.span>
+                You’re on the list.
               </p>
               <button
                 type="button"
                 onClick={() => dialog.current?.close()}
-                className="self-start rounded-[7px] border border-line-strong bg-surface px-[18px] py-2.5 font-mono text-sm text-ink transition-colors hover:border-ink"
+                className="self-start rounded-[7px] border border-line-strong bg-surface px-[18px] py-2.5 text-sm text-ink transition-colors hover:border-ink"
               >
                 Close
               </button>
-            </div>
+            </m.div>
           ) : (
             <form onSubmit={submit} className="flex flex-col gap-3">
               <input
@@ -114,24 +155,35 @@ export default function WaitlistButton() {
                 className="rounded-[7px] border border-line-strong bg-surface px-3.5 py-[11px] font-mono text-sm text-ink outline-none placeholder:text-faint focus:border-ink"
               />
 
-              {error ? (
-                <p role="alert" className="m-0 font-mono text-[13px] text-muted">
-                  {error}
-                </p>
-              ) : null}
+              <AnimatePresence initial={false}>
+                {error ? (
+                  <m.p
+                    role="alert"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    className="m-0 overflow-hidden text-[13px] text-body"
+                  >
+                    {error}
+                  </m.p>
+                ) : null}
+              </AnimatePresence>
 
               <div className="flex items-center gap-3">
-                <button
+                <m.button
                   type="submit"
                   disabled={sending}
-                  className="inline-flex items-center gap-2 rounded-[7px] bg-ink px-[22px] py-[13px] font-mono text-sm font-medium text-bg transition-colors hover:bg-[color:var(--td-accent)] hover:text-white disabled:opacity-60"
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.12 }}
+                  className="inline-flex items-center gap-2 rounded-[7px] bg-ink px-[22px] py-[13px] text-sm text-bg transition-colors hover:bg-[color:var(--td-accent)] hover:text-white disabled:opacity-60"
                 >
                   {sending ? "Joining…" : "Join Waitlist"}
-                </button>
+                </m.button>
                 <button
                   type="button"
                   onClick={() => dialog.current?.close()}
-                  className="font-mono text-[13px] text-muted transition-colors hover:text-ink"
+                  className="text-[13px] text-muted transition-colors hover:text-ink"
                 >
                   Cancel
                 </button>
