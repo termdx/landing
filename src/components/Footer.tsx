@@ -27,8 +27,8 @@ export default function Footer() {
           >
             GitHub
           </a>
-          <a href="mailto:shivaraj@termdx.studio" className={LINK}>
-            Mail
+          <a href="mailto:support@termdx.studio" className={LINK}>
+            Support
           </a>
         </nav>
       </div>
