@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { Star } from "lucide-react";
 import FaqList from "./FaqList";
 import FlowDiagram from "./FlowDiagram";
+import { StandupFigure } from "./StandupDigest";
 import Footer from "./Footer";
 import InstallTabs from "./InstallTabs";
 import NewsletterForm from "./NewsletterForm";
@@ -212,32 +213,62 @@ export default function ProductPage({ product, displayFont }: Props) {
             </p>
           </Reveal>
 
+          {/* The output first, then the mechanism. The headline sells a
+              standup, so the page should show one before it explains the
+              pipeline that produces it. */}
+          {product.standup ? <StandupFigure standup={product.standup} /> : null}
+
           {product.whatIs.diagram ? (
             <Reveal delay={0.08} className="mt-9">
               <FlowDiagram flow={product.whatIs.diagram} />
             </Reveal>
           ) : null}
 
-          <div className="mt-9 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {product.whatIs.points.map((point, index) => (
-              <Reveal
-                key={point.name}
-                // Stagger by column pair so a two-up row arrives together-ish
-                // rather than as six separate events.
-                delay={(index % 2) * 0.06}
-                className="h-full"
-              >
-                <article className="flex h-full flex-col gap-3.5 rounded-xl border border-line bg-bg p-7 transition-colors hover:border-line-hover">
-                  <h3 className="m-0 font-mono text-lg font-bold">
-                    {point.name}
-                  </h3>
-                  <p className="m-0 text-[15px] leading-[1.6] text-body text-pretty">
-                    {point.description}
-                  </p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+          {/* One panel of hairline-divided rows rather than a grid of separate
+              cards — a wall of equal boxes gave the headline feature the same
+              weight as the footnotes. Revealed as a single unit: animating the
+              cells independently would slide the dividers they share. */}
+          <Reveal delay={0.14} className="mt-9">
+            <div className="overflow-hidden rounded-xl border border-line bg-bg md:grid md:grid-cols-2">
+              {product.whatIs.points.map((point, index) => {
+                const Icon = point.icon;
+                return (
+                  <article
+                    key={point.name}
+                    // Borders draw the dividers, so the panel reads as one
+                    // surface. Stacked: a rule above every row but the first.
+                    // Two-up: that rule belongs to rows 2+, and the right
+                    // column gains a left rule. An odd final point would sit
+                    // half-width; every product has an even count today.
+                    className={[
+                      "flex flex-col gap-2.5 border-line p-6 sm:p-7",
+                      index > 0 ? "border-t" : "",
+                      index === 1 ? "md:border-t-0" : "",
+                      index % 2 === 1 ? "md:border-l" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      {Icon ? (
+                        <Icon
+                          aria-hidden="true"
+                          strokeWidth={1.9}
+                          className="h-[17px] w-[17px] shrink-0 text-[color:var(--td-accent)]"
+                        />
+                      ) : null}
+                      <h3 className="m-0 font-mono text-[15px] font-bold text-ink">
+                        {point.name}
+                      </h3>
+                    </div>
+                    <p className="m-0 text-[15px] leading-[1.6] text-body text-pretty">
+                      {point.description}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -279,7 +310,7 @@ export default function ProductPage({ product, displayFont }: Props) {
         </div>
       </section>
 
-      <Footer />
+      <Footer currentSlug={product.slug} />
     </div>
   );
 }

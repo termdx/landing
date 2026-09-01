@@ -11,7 +11,7 @@ const OFFERINGS = [
   {
     name: "developer tools",
     description:
-      "CLIs, TUIs, and internal platforms — the kind of software we ship for ourselves, built for your team.",
+      "CLIs, TUIs, and internal platforms: the kind of software we ship for ourselves, built for your team.",
   },
   {
     name: "custom software",

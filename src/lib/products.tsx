@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
+import {
+  Blocks,
+  ChartColumn,
+  ClipboardCheck,
+  Database,
+  GitCommitHorizontal,
+  Globe,
+  Server,
+  ShieldCheck,
+} from "lucide-react";
 
 /**
  * One way to get the thing onto a machine. Rendered as a tab in the install
@@ -13,10 +24,12 @@ export type InstallOption = {
   command: string;
 };
 
-/** A card in the "What is …" grid. */
+/** A row in the "What is …" panel. */
 export type ProductPoint = {
   name: string;
   description: string;
+  /** Accent glyph beside the label. Absent → the row is label and copy only. */
+  icon?: LucideIcon;
 };
 
 export type FaqItem = {
@@ -31,6 +44,22 @@ export type FlowNode = { label: string; detail?: string; accent?: boolean };
 export type FlowRow = { nodes: FlowNode[]; branch?: boolean };
 
 export type Flow = { rows: FlowRow[]; caption?: string };
+
+/**
+ * A sample of the digest Relay posts each morning. Illustrative copy, not a
+ * real client's data — it exists so the "automate your daily standups"
+ * headline has something on the page that shows what that actually looks like.
+ */
+export type Standup = {
+  channel: string;
+  time: string;
+  project: string;
+  groups: { label: string; items: string[] }[];
+  /** Last line inside the card. */
+  footer: string;
+  /** Figure caption, outside the card. */
+  caption: string;
+};
 
 export type Product = {
   /**
@@ -102,6 +131,8 @@ export type Product = {
      */
     src?: string;
   };
+  /** Sample morning digest, drawn under the "What is …" lead. */
+  standup?: Standup;
   whatIs: {
     lead: string;
     points: ProductPoint[];
@@ -141,7 +172,7 @@ const RELAY_LOOP: Flow = {
     },
   ],
   caption:
-    "Relay runs this loop unattended — the standup, the portal answers, and the analytics need nobody. Only the last branch waits for a human: anything that writes back out to your tools or your client is an explicit act, never a default.",
+    "Relay runs this loop unattended. The standup, the portal answers, and the analytics need nobody. Only the last branch waits for a human: anything that writes back out to your tools or your client is an explicit act, never a default.",
 };
 
 export const products: Product[] = [
@@ -159,7 +190,7 @@ export const products: Product[] = [
     prompt: "piper",
     tagline: "A keyboard-driven API client for your terminal",
     summary:
-      "A fast, keyboard-driven API client that runs where you already are. Tab between panels, edit headers and bodies in popups, search your history, read syntax-highlighted JSON — and never reach for the mouse. Postman can keep it.",
+      "A fast, keyboard-driven API client that runs where you already are. Tab between panels, edit headers and bodies in popups, search your history, read syntax-highlighted JSON, and never reach for the mouse. Postman can keep it.",
     install: {
       lead: "piper runs on Bun. Install it, then type piper to launch the TUI.",
       options: [
@@ -180,7 +211,7 @@ export const products: Product[] = [
       note: "A recording of the TUI in flight: tab, edit, send, read. Until then the README carries the full keymap.",
     },
     whatIs: {
-      lead: "piper is an interactive API client that runs inside your terminal, built on OpenTUI. It's protocol-agnostic by design — it starts with HTTP, and chaining, WebSocket streaming, and saved collections are what it grows into. Everything is a keystroke: no mouse, no window management, no context switch.",
+      lead: "piper is an interactive API client that runs inside your terminal, built on OpenTUI. It's protocol-agnostic by design: it starts with HTTP, and chaining, WebSocket streaming, and saved collections are what it grows into. Everything is a keystroke: no mouse, no window management, no context switch.",
       points: [
         {
           name: "interactive TUI",
@@ -210,7 +241,7 @@ export const products: Product[] = [
         {
           name: "protocol-agnostic",
           description:
-            "HTTP today. Request chaining — piping one response into the next like Unix pipes — plus WebSocket streaming and collections with variables are next.",
+            "HTTP today. Next up: request chaining, which pipes one response into the next like Unix pipes, plus WebSocket streaming and collections with variables.",
         },
       ],
     },
@@ -218,7 +249,7 @@ export const products: Product[] = [
       {
         question: "Do I need Bun?",
         answer:
-          "Yes — piper runs on Bun, so bun install -g @termdx/piper is the install path. Once it's on your PATH, plain piper launches it.",
+          "Yes. piper runs on Bun, so bun install -g @termdx/piper is the install path. Once it's on your PATH, plain piper launches it.",
       },
       {
         question: "Is there a mouse mode?",
@@ -228,7 +259,7 @@ export const products: Product[] = [
       {
         question: "Can I get a request back out as cURL?",
         answer:
-          "Ctrl+E exports the current request as a cURL command, and Ctrl+Y yanks selected response text to the clipboard — for the pull request, the bug report, or the colleague who doesn't have piper yet.",
+          "Ctrl+E exports the current request as a cURL command, and Ctrl+Y yanks selected response text to the clipboard, for the pull request, the bug report, or the colleague who doesn't have piper yet.",
       },
       {
         question: "Does it do WebSockets, chaining, or collections?",
@@ -238,7 +269,7 @@ export const products: Product[] = [
       {
         question: "Is it open source?",
         answer:
-          "Yes — MIT, on GitHub. Issues and pull requests are read by people who use it daily.",
+          "Yes. MIT, on GitHub. Issues and pull requests are read by people who use it daily.",
       },
     ],
     newsletter:
@@ -262,7 +293,7 @@ export const products: Product[] = [
     prompt: "codrop run",
     tagline: "Your working state, on every machine you own",
     summary:
-      "codrop keeps code, environments, and .env files in step across every machine you work from. Laptop, desktop, the box under the desk — pick one up and it's already where you left off. git pull is now decorative.",
+      "codrop keeps code, environments, and .env files in step across every machine you work from. Laptop, desktop, the box under the desk: pick one up and it's already where you left off. git pull is now decorative.",
     install: {
       lead: "Unix-only: prebuilt binaries for macOS (Apple Silicon and Intel) and Linux x86-64. Install it on each machine you want in the set, then check it took with codrop --version.",
       options: [
@@ -294,12 +325,12 @@ export const products: Product[] = [
       note: "A recording of the boring miracle: save on one machine, open on the other.",
     },
     whatIs: {
-      lead: "codrop is a Rust daemon that watches a folder, content-addresses every change, and syncs it to your other devices over an encrypted peer-to-peer connection. Devices are identified and authenticated by public key, so you never deal with IP addresses — and it works across LAN, NAT, and hostile café Wi-Fi. It isn't a replacement for git. It's the layer underneath, where your half-finished branch and your .env file live.",
+      lead: "codrop is a Rust daemon that watches a folder, content-addresses every change, and syncs it to your other devices over an encrypted peer-to-peer connection. Devices are identified and authenticated by public key, so you never deal with IP addresses, and it works across LAN, NAT, and hostile café Wi-Fi. It isn't a replacement for git. It's the layer underneath, where your half-finished branch and your .env file live.",
       points: [
         {
           name: "live, not committed",
           description:
-            "Git records commits; codrop mirrors your working folder in real time. An edit on the laptop shows up on the desktop about a second later — new files, changes, deletes.",
+            "Git records commits; codrop mirrors your working folder in real time. An edit on the laptop shows up on the desktop about a second later: new files, changes, deletes.",
         },
         {
           name: "encrypted p2p",
@@ -309,7 +340,7 @@ export const products: Product[] = [
         {
           name: "conflicts preserved",
           description:
-            "Vector clocks — not wall-clock time — order changes, so a newer edit is distinguishable from a concurrent one. One version wins the path; the other is kept under .codrop/conflicts/.",
+            "Vector clocks, not wall-clock time, order changes, so a newer edit is distinguishable from a concurrent one. One version wins the path; the other is kept under .codrop/conflicts/.",
         },
         {
           name: "only changed chunks move",
@@ -332,12 +363,12 @@ export const products: Product[] = [
       {
         question: "Isn't this what git is for?",
         answer:
-          "Git records commits. codrop mirrors your working folder in real time. Use both: git for history, PRs, and blame; codrop for the uncommitted stuff between commits — the state you'd otherwise shuttle around with git stash, a USB stick, or a desperate Slack file drop.",
+          "Git records commits. codrop mirrors your working folder in real time. Use both: git for history, PRs, and blame; codrop for the uncommitted stuff between commits: the state you'd otherwise shuttle around with git stash, a USB stick, or a desperate Slack file drop.",
       },
       {
         question: "How do two machines find each other?",
         answer:
-          "Not by IP address. Each folder has a stable endpoint id — run codrop id to print it — and pairing is mutual: run codrop pair with the other machine's id on both sides, then codrop run. More than two machines pair with each other to form a mesh.",
+          "Not by IP address. Each folder has a stable endpoint id (run codrop id to print it), and pairing is mutual: run codrop pair with the other machine's id on both sides, then codrop run. More than two machines pair with each other to form a mesh.",
       },
       {
         question: "Does node_modules sync?",
@@ -347,12 +378,12 @@ export const products: Product[] = [
       {
         question: "Who can read my files?",
         answer:
-          "Traffic is end-to-end encrypted between devices you've explicitly paired, and a daemon only accepts trusted peers. Blobs are stored unencrypted at rest under .codrop/, though — so don't sync secrets to a device you don't control, and use codrop ignore to keep a file on one machine.",
+          "Traffic is end-to-end encrypted between devices you've explicitly paired, and a daemon only accepts trusted peers. Blobs are stored unencrypted at rest under .codrop/, though, so don't sync secrets to a device you don't control, and use codrop ignore to keep a file on one machine.",
       },
       {
         question: "Which platforms are supported?",
         answer:
-          "Prebuilt binaries for macOS on Apple Silicon and Intel, and Linux x86-64. Linux arm64 and musl build from source. Windows isn't supported — the daemon relies on Unix process and file-permission APIs — so it means WSL, give or take.",
+          "Prebuilt binaries for macOS on Apple Silicon and Intel, and Linux x86-64. Linux arm64 and musl build from source. Windows isn't supported, because the daemon relies on Unix process and file-permission APIs, so it means WSL, give or take.",
       },
       {
         question: "What's the licence?",
@@ -376,15 +407,43 @@ export const products: Product[] = [
     prompt: "relay up",
     tagline: "Automate your daily standups",
     summary:
-      "Automate your daily standups. Relay is the operating system for client work: it sits in the background, watching the tools you already ship with and turning every commit, PR, meeting, and message into a live timeline and a per-project knowledge base — one that answers your clients, feeds your analytics, and powers an AI chat on your own domain. The status update writes itself.",
+      "Automate your daily standups. Relay is the operating system for client work: it sits in the background, watching the tools you already ship with and turning every commit, PR, meeting, and message into a live timeline and a per-project knowledge base, one that answers your clients, feeds your analytics, and powers an AI chat on your own domain. The status update writes itself.",
     seoDescription:
-      "Automate your daily standups. Relay turns every commit, PR, and meeting into a client timeline, a knowledge base that answers your clients, and analytics — no status meeting required. Self-hosted.",
+      "Automate your daily standups. Relay turns every commit, PR, and meeting into a client timeline, a knowledge base that answers your clients, and analytics. No status meeting required. Self-hosted.",
     waitlist: true,
     screenshot: {
       src: "/relay-app.png",
       width: 2584,
       height: 1442,
       alt: "Relay showing a client's page: delivery and workspace navigation, a client portal sign-in link, and the client's projects with repo and status.",
+    },
+    standup: {
+      channel: "#delivery",
+      time: "9:00",
+      project: "Northwind · storefront rebuild",
+      groups: [
+        {
+          label: "SHIPPED YESTERDAY",
+          items: [
+            "Checkout now retries a failed payment instead of dropping the cart (#218, 4 commits)",
+            "Search indexing moved off the request path",
+          ],
+        },
+        {
+          label: "IN REVIEW",
+          items: ["Address validation for EU postcodes (#221, open 2 days)"],
+        },
+        {
+          label: "WAITING ON YOU",
+          items: [
+            "2 client updates drafted and held for approval",
+            "Kickoff notes from Tuesday's call are unfiled",
+          ],
+        },
+      ],
+      footer: "Nobody wrote this. Relay read the repo, the calendar and the thread.",
+      caption:
+        "This is the whole product in one artefact: Relay had already seen the commits, the PRs and the call, so the standup was written before anyone would have held it. Sample data, and the shape is the point.",
     },
     // No install section: Relay is private beta, and the waitlist is the only
     // way in until the repo opens up.
@@ -393,46 +452,54 @@ export const products: Product[] = [
       note: "A walkthrough of one commit becoming a standup, a client answer, and a line on the analytics. Recording soon; the waitlist gets it first.",
     },
     whatIs: {
-      lead: "Automate your daily standups. Relay is the operating system for client work: it sits in the background, watching the tools you already ship with and turning every commit, PR, meeting, and message into a live timeline and a per-project knowledge base — one that answers your clients, feeds your analytics, and powers an AI chat on your own domain. The status update writes itself.",
+      lead: "Automate your daily standups. Relay is the operating system for client work: it sits in the background, watching the tools you already ship with and turning every commit, PR, meeting, and message into a live timeline and a per-project knowledge base, one that answers your clients, feeds your analytics, and powers an AI chat on your own domain. The status update writes itself.",
       diagram: RELAY_LOOP,
       points: [
         {
           name: "automated standups",
+          icon: ClipboardCheck,
           description:
-            "Relay already saw the commits, the PRs, and what merged. It writes the standup from the timeline and posts it where your team reads it — nobody types a status update, nobody blocks half an hour to say it out loud.",
+            "Relay already saw the commits, the PRs, and what merged. It writes the standup from the timeline and posts it where your team reads it. Nobody types a status update, nobody blocks half an hour to say it out loud.",
         },
         {
           name: "timeline",
+          icon: GitCommitHorizontal,
           description:
             "Every commit, PR, meeting, todo, and decision captured against a client and project. “Where are we?” stops being a meeting.",
         },
         {
           name: "knowledge engine",
+          icon: Database,
           description:
-            "Everything tracked is embedded into a per-project knowledge base — the source of truth. Relay AI answers with citations, scoped in SQL, never in prompts.",
+            "Everything tracked is embedded into a per-project knowledge base, the source of truth. Relay AI answers with citations, scoped in SQL, never in prompts.",
         },
         {
           name: "analytics",
+          icon: ChartColumn,
           description:
             "The same timeline that writes your standup adds up: throughput, where a project's time actually went, which client is quiet and which is not. Reported, not assembled by hand.",
         },
         {
           name: "client portal",
+          icon: Globe,
           description:
-            "relay.yourcompany.com — your clients see live progress, approve work, and ask Relay AI anything about their project. Your branding, your domain.",
+            "relay.yourcompany.com: your clients see live progress, approve work, and ask Relay AI anything about their project. Your branding, your domain.",
         },
         {
           name: "approval on writes only",
+          icon: ShieldCheck,
           description:
-            "Reading runs unattended; writing does not. Issues land on GitHub and emails get sent only after you approve them — the one place Relay deliberately keeps a human, and external writes are durable and retried.",
+            "Reading runs unattended; writing does not. Issues land on GitHub and emails get sent only after you approve them. That is the one place Relay deliberately keeps a human, and external writes are durable and retried.",
         },
         {
           name: "integrations",
+          icon: Blocks,
           description:
-            "GitHub, GitLab, Bitbucket, Slack, Discord, SMTP. Events flow in, notifications flow out — normalized at the edge, never vendor payloads.",
+            "GitHub, GitLab, Bitbucket, Slack, Discord, SMTP. Events flow in, notifications flow out, normalized at the edge, never vendor payloads.",
         },
         {
           name: "self-hosted runtime",
+          icon: Server,
           description:
             "Declarative YAML manifests become docker-compose: modules, integrations, encrypted secrets. Your stack, your data, your client's trust.",
         },
@@ -447,7 +514,7 @@ export const products: Product[] = [
       {
         question: "Is Relay self-hosted?",
         answer:
-          "Yes. Declarative YAML manifests compile to docker-compose — modules, integrations, encrypted secrets — and the whole stack runs on infrastructure you control. Client data never has to leave it.",
+          "Yes. Declarative YAML manifests compile to docker-compose (modules, integrations, encrypted secrets), and the whole stack runs on infrastructure you control. Client data never has to leave it.",
       },
       {
         question: "Which tools does it connect to?",
@@ -457,17 +524,17 @@ export const products: Product[] = [
       {
         question: "Does the AI act on my tools by itself?",
         answer:
-          "It reads on its own and writes only with you. Standups, portal answers, and analytics are generated unattended — none of that touches your tools. Anything that writes back out, like filing an issue or sending an email, waits for your approval and goes through a durable outbox that retries rather than losing the work.",
+          "It reads on its own and writes only with you. Standups, portal answers, and analytics are generated unattended. None of that touches your tools. Anything that writes back out, like filing an issue or sending an email, waits for your approval and goes through a durable outbox that retries rather than losing the work.",
       },
       {
         question: "What do clients actually see?",
         answer:
-          "A portal on your domain with your branding: live progress, work waiting on their approval, and a chat with Relay AI that answers from their project's knowledge base — with citations, scoped to their project in SQL.",
+          "A portal on your domain with your branding: live progress, work waiting on their approval, and a chat with Relay AI that answers from their project's knowledge base, with citations, scoped to their project in SQL.",
       },
       {
         question: "How is Relay licensed?",
         answer:
-          "Relay is commercial software, not open source. You buy a licence and run the stack on your own infrastructure — the source stays ours, the deployment and the client data stay yours.",
+          "Relay is commercial software, not open source. You buy a licence and run the stack on your own infrastructure: the source stays ours, the deployment and the client data stay yours.",
       },
       {
         question: "Can I use it yet?",
