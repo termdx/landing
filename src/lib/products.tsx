@@ -64,7 +64,12 @@ export type Product = {
   prompt: string;
   /** Positioning line under the product name. No trailing period. */
   tagline: string;
-  /** Hero paragraph. */
+  /**
+   * Description fallback for <meta name="description"> and og:description.
+   * No longer rendered on the page — the hero shows the tagline alone, and
+   * the long copy lives in whatIs.lead — so a product with seoDescription set
+   * never surfaces this.
+   */
   summary: string;
   /** Overrides `summary` for <meta name="description">. */
   seoDescription?: string;
@@ -74,6 +79,17 @@ export type Product = {
   install?: {
     lead: string;
     options: InstallOption[];
+  };
+  /**
+   * Product screenshot shown under the hero, in /public. Retained alongside
+   * `demo` because the demo section is only parked, not retired.
+   */
+  screenshot?: {
+    src: string;
+    /** Intrinsic size, so next/image can reserve the box. */
+    width: number;
+    height: number;
+    alt: string;
   };
   demo: {
     /** Title bar of the demo frame's terminal chrome. */
@@ -109,19 +125,23 @@ const RELAY_LOOP: Flow = {
     },
     {
       branch: true,
+      nodes: [{ label: "daily standup", detail: "written, not held" }],
+    },
+    {
+      branch: true,
+      nodes: [{ label: "client portal", detail: "+ Relay AI chat" }],
+    },
+    {
+      branch: true,
       nodes: [
         { label: "AI drafts" },
         { label: "you approve" },
         { label: "pushed to your tools" },
       ],
     },
-    {
-      branch: true,
-      nodes: [{ label: "client portal", detail: "+ Relay AI chat" }],
-    },
   ],
   caption:
-    "Every feature in Relay strengthens this loop. Nothing reaches a client that hasn't passed the approval step — publishing is an explicit act, never a default.",
+    "Relay runs this loop unattended — the standup, the portal answers, and the analytics need nobody. Only the last branch waits for a human: anything that writes back out to your tools or your client is an explicit act, never a default.",
 };
 
 export const products: Product[] = [
@@ -346,30 +366,41 @@ export const products: Product[] = [
   {
     slug: "Relay",
     name: "Relay",
-    badges: ["AI workflows", "client management", "orchestration layer"],
+    badges: ["standup automation", "client management", "orchestration layer"],
     description:
-      "The operating system for client work: one timeline per client, a knowledge base that answers “where are we?”, and a portal your clients actually open. AI drafts every update — nothing reaches a client until you approve it.",
+      "Automate your daily standups. Relay sits in the background turning every commit, PR, and message into a knowledge base that answers your clients, feeds your analytics, and powers an AI chat on your own domain.",
     // Commercial and closed-source: no repo to link, a call to book instead.
     bookUrl: "https://cal.com/termdx.studio",
     logo: "/relay-logo.png",
     accent: "#7C5CFF",
     prompt: "relay up",
-    tagline: "The operating system for client work",
+    tagline: "Automate your daily standups",
     summary:
-      "Relay connects the tools you already ship with into one timeline per client, a knowledge base that answers “where are we?”, and a portal where your clients watch it all happen. AI drafts, you approve.",
+      "Automate your daily standups. Relay is the operating system for client work: it sits in the background, watching the tools you already ship with and turning every commit, PR, meeting, and message into a live timeline and a per-project knowledge base — one that answers your clients, feeds your analytics, and powers an AI chat on your own domain. The status update writes itself.",
     seoDescription:
-      "Relay connects the tools you already ship with into one timeline per client, a knowledge base that answers 'where are we?', and a client portal with an AI that knows your project. Self-hosted.",
+      "Automate your daily standups. Relay turns every commit, PR, and meeting into a client timeline, a knowledge base that answers your clients, and analytics — no status meeting required. Self-hosted.",
     waitlist: true,
+    screenshot: {
+      src: "/relay-app.png",
+      width: 2584,
+      height: 1442,
+      alt: "Relay showing a client's page: delivery and workspace navigation, a client portal sign-in link, and the client's projects with repo and status.",
+    },
     // No install section: Relay is private beta, and the waitlist is the only
     // way in until the repo opens up.
     demo: {
-      caption: "Relay — timeline, portal, approval loop",
-      note: "A walkthrough of one signal travelling the whole loop. Recording soon; the waitlist gets it first.",
+      caption: "Relay — the standup that writes itself",
+      note: "A walkthrough of one commit becoming a standup, a client answer, and a line on the analytics. Recording soon; the waitlist gets it first.",
     },
     whatIs: {
-      lead: "Relay is the orchestration and knowledge layer over the tools you already ship with. Every commit, PR, meeting, and message lands on a client timeline, gets embedded into a per-project knowledge base, and comes back out as answers with citations — for you in the app, for your client in a portal on your own domain. Nothing reaches a client until a human approves it.",
+      lead: "Automate your daily standups. Relay is the operating system for client work: it sits in the background, watching the tools you already ship with and turning every commit, PR, meeting, and message into a live timeline and a per-project knowledge base — one that answers your clients, feeds your analytics, and powers an AI chat on your own domain. The status update writes itself.",
       diagram: RELAY_LOOP,
       points: [
+        {
+          name: "automated standups",
+          description:
+            "Relay already saw the commits, the PRs, and what merged. It writes the standup from the timeline and posts it where your team reads it — nobody types a status update, nobody blocks half an hour to say it out loud.",
+        },
         {
           name: "timeline",
           description:
@@ -381,14 +412,19 @@ export const products: Product[] = [
             "Everything tracked is embedded into a per-project knowledge base — the source of truth. Relay AI answers with citations, scoped in SQL, never in prompts.",
         },
         {
+          name: "analytics",
+          description:
+            "The same timeline that writes your standup adds up: throughput, where a project's time actually went, which client is quiet and which is not. Reported, not assembled by hand.",
+        },
+        {
           name: "client portal",
           description:
             "relay.yourcompany.com — your clients see live progress, approve work, and ask Relay AI anything about their project. Your branding, your domain.",
         },
         {
-          name: "approval loop",
+          name: "approval on writes only",
           description:
-            "AI drafts, humans decide. Issues land on GitHub, emails get sent — only after you hit approve. External writes are durable and retried.",
+            "Reading runs unattended; writing does not. Issues land on GitHub and emails get sent only after you approve them — the one place Relay deliberately keeps a human, and external writes are durable and retried.",
         },
         {
           name: "integrations",
@@ -404,6 +440,11 @@ export const products: Product[] = [
     },
     faq: [
       {
+        question: "Does this actually replace our daily standup?",
+        answer:
+          "That is the point. Relay already sees the commits, the PRs, and what merged, so it writes the standup from the timeline and posts it where your team reads it. Nobody types a status update, and nobody blocks half an hour to say it out loud. You read it when you want it.",
+      },
+      {
         question: "Is Relay self-hosted?",
         answer:
           "Yes. Declarative YAML manifests compile to docker-compose — modules, integrations, encrypted secrets — and the whole stack runs on infrastructure you control. Client data never has to leave it.",
@@ -416,7 +457,7 @@ export const products: Product[] = [
       {
         question: "Does the AI act on my tools by itself?",
         answer:
-          "No. AI drafts; humans decide. Issues get filed and emails get sent only after you approve them, and external writes go through a durable outbox that retries rather than losing the work.",
+          "It reads on its own and writes only with you. Standups, portal answers, and analytics are generated unattended — none of that touches your tools. Anything that writes back out, like filing an issue or sending an email, waits for your approval and goes through a durable outbox that retries rather than losing the work.",
       },
       {
         question: "What do clients actually see?",

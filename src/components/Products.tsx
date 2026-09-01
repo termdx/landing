@@ -41,18 +41,24 @@ function Badges({ product }: { product: Product }) {
  * readout, so the eye lands on the source of truth everything else feeds.
  */
 function Step({ node }: { node: FlowNode }) {
+  // A bare string in a flex container is an anonymous item that breaks
+  // mid-label, so a two-word label like "daily standup" would interleave with
+  // its detail into two ragged columns. nowrap keeps the label whole;
+  // flex-wrap drops the detail onto its own line instead.
+  const label = <span className="whitespace-nowrap">{node.label}</span>;
+
   if (node.accent) {
     return (
-      <span className="inline-flex items-baseline gap-1.5 rounded-[5px] border border-[color:var(--td-accent)] bg-bg px-2 py-0.5 text-[color:var(--td-accent)]">
-        {node.label}
+      <span className="inline-flex flex-wrap items-baseline gap-x-1.5 rounded-[5px] border border-[color:var(--td-accent)] bg-bg px-2 py-0.5 text-[color:var(--td-accent)]">
+        {label}
         {node.detail ? <span className="opacity-70">{node.detail}</span> : null}
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-baseline gap-1.5 text-ink">
-      {node.label}
+    <span className="inline-flex flex-wrap items-baseline gap-x-1.5 text-ink">
+      {label}
       {node.detail ? <span className="text-faint">{node.detail}</span> : null}
     </span>
   );
@@ -89,9 +95,9 @@ function Rail() {
 
 /**
  * The featured product's loop, compressed for a card. Same rows as the full
- * FlowDiagram on the product page — including the approval branch, which is
- * the whole pitch — but drawn as mono output lines instead of boxes, since a
- * ~430px column can't hold a three-box chain without breaking mid-arrow.
+ * FlowDiagram on the product page — every branch, including the one human gate
+ * at the end — but drawn as mono output lines instead of boxes, since a ~430px
+ * column can't hold a three-box chain without breaking mid-arrow.
  */
 function LoopReadout({ flow }: { flow: Flow }) {
   const spine = flow.rows.filter((row) => !row.branch);

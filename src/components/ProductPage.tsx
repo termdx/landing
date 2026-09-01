@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties, ReactNode } from "react";
-import { Play, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import FaqList from "./FaqList";
 import FlowDiagram from "./FlowDiagram";
 import Footer from "./Footer";
@@ -47,54 +47,48 @@ export default function ProductPage({ product, displayFont }: Props) {
       <header
         className={`${SHELL} flex flex-col items-center pb-[88px] pt-24 text-center`}
       >
-        {product.logo ? (
-          <Reveal immediate>
-            <Image
-              src={product.logo}
-              alt={product.name}
-              width={96}
-              height={96}
-              className="mb-[26px] h-24 w-24"
-              priority
-            />
-          </Reveal>
-        ) : null}
-
-        <Reveal immediate delay={0.05}>
-          <div className="mb-5 flex items-center justify-center gap-0.5 text-[15px] text-[color:var(--td-accent)]">
-            <span className="opacity-[0.65]">$</span>
-            <span>&nbsp;{product.prompt}</span>
-            <span
-              aria-hidden="true"
-              className="ml-1.5 inline-block h-[17px] w-2 align-text-bottom bg-[color:var(--td-accent)] [animation:td-blink_1.1s_step-end_infinite]"
-            />
+        {/* Mark and name read as one lockup. The mark is sized just above the
+            heading's cap height so it leads without dwarfing it; a product
+            without one simply centres the name. */}
+        <Reveal immediate>
+          {/* Tight gap on purpose: relay-logo.png carries ~16% transparent
+              padding on its right edge, so ~11px of optical space at 72px is
+              already baked in before this gap applies. */}
+          <div className="flex items-center justify-center gap-2 sm:gap-2.5">
+            {product.logo ? (
+              // Decorative: the h1 beside it already names the product.
+              <Image
+                src={product.logo}
+                alt=""
+                width={256}
+                height={256}
+                className="h-14 w-14 shrink-0 sm:h-[72px] sm:w-[72px]"
+                // Above the fold. `priority` is deprecated in Next 16; eager
+                // is the documented replacement.
+                loading="eager"
+              />
+            ) : null}
+            <h1
+              className={`${displayFont} m-0 text-[46px] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[60px]`}
+            >
+              {product.name}
+            </h1>
           </div>
         </Reveal>
 
-        <Reveal immediate delay={0.1}>
-          <h1
-            className={`${displayFont} m-0 text-[46px] font-bold leading-[1.05] tracking-[-0.035em] sm:text-[60px]`}
-          >
-            {product.name}
-          </h1>
-        </Reveal>
-
-        <Reveal immediate delay={0.16}>
-          <p className="m-0 mt-4 max-w-[620px] text-[19px] leading-[1.5] text-ink text-pretty">
+        {/* The tagline carries the hero alone — the long description moved
+            down to the "What is …" section, where the question is actually
+            asked. mb-9 was on that paragraph, so it moves up here. */}
+        <Reveal immediate delay={0.08}>
+          <p className="m-0 mt-4 mb-9 max-w-[620px] text-[19px] leading-[1.5] text-ink text-pretty">
             {product.tagline}.
-          </p>
-        </Reveal>
-
-        <Reveal immediate delay={0.22}>
-          <p className="m-0 mt-[18px] mb-9 max-w-[560px] text-[17px] leading-[1.6] text-body text-pretty">
-            {product.summary}
           </p>
         </Reveal>
 
         {/* Leading action is the repo for the open-source tools and the
             waitlist for the licensed one, so the filled button follows
             whichever this product actually is. */}
-        <Reveal immediate delay={0.28}>
+        <Reveal immediate delay={0.16}>
           <div className="flex flex-wrap justify-center gap-3">
             {product.repoUrl ? (
               <a
@@ -143,6 +137,38 @@ export default function ProductPage({ product, displayFont }: Props) {
         </Reveal>
       </header>
 
+      {/* The product shot sits directly under the hero, which now carries only
+          the tagline — the layout the brief pointed at. Built from this
+          site's own primitives rather than the referenced shadcn stack. The
+          reference's gradient fade is dropped: it bled the frame into the page
+          ground, which meant painting over the frame's own bottom border and
+          rounded corners. A closed card suits the rest of the site anyway,
+          where every surface is a crisp bordered panel. */}
+      {product.screenshot ? (
+        // Deliberately wider than SHELL's 1060px prose measure: this is a
+        // dense app UI, and at the text width its labels stop being legible.
+        <div className="mx-auto max-w-[1400px] px-7 pb-[76px]">
+          <Reveal immediate delay={0.24}>
+            {/* overflow-hidden clips the shot to the same radius, so all four
+                corners round together rather than the image squaring them off. */}
+            <div className="overflow-hidden rounded-2xl border border-line bg-surface p-2 shadow-[0_24px_60px_-24px_rgba(27,29,31,0.22)]">
+              <Image
+                src={product.screenshot.src}
+                alt={product.screenshot.alt}
+                width={product.screenshot.width}
+                height={product.screenshot.height}
+                // Sits in the first viewport on a desktop, so it is the LCP
+                // candidate. `priority` is deprecated in Next 16; eager is
+                // the documented replacement.
+                loading="eager"
+                sizes="(max-width: 1400px) 100vw, 1400px"
+                className="block h-auto w-full rounded-xl border border-line"
+              />
+            </div>
+          </Reveal>
+        </div>
+      ) : null}
+
       {/* Installation options — absent for a product with nothing to install
           yet, which also removes the hero's #install jump above. */}
       {product.install ? (
@@ -169,67 +195,9 @@ export default function ProductPage({ product, displayFont }: Props) {
         </section>
       ) : null}
 
-      {/* Demo video placeholder */}
-      <section id="demo" className="border-t border-line">
-        <div className={`${SHELL} py-[76px]`}>
-          <Reveal>
-            <Prompt>$ play demo.mp4</Prompt>
-            <h2 className={`${heading} mt-3 mb-9 text-[28px]`}>See it run</h2>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <div className="overflow-hidden rounded-xl border border-line bg-surface">
-              {/* Terminal chrome, so an empty frame still looks deliberate. */}
-              <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-                <span className="flex gap-1.5" aria-hidden="true">
-                  <span className="h-2.5 w-2.5 rounded-full bg-line-hover" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-line-hover" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-line-hover" />
-                </span>
-                <span className="ml-1.5 font-mono text-xs text-faint">
-                  {product.demo.caption}
-                </span>
-              </div>
-              {product.demo.src ? (
-                // A recording exists — play it inside the same chrome.
-                <video
-                  src={product.demo.src}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="aspect-video w-full bg-bg"
-                />
-              ) : (
-                /* min-h keeps the caption stack from overflowing the frame on a
-                   phone, where 16:9 is only ~180px tall. */
-                <div className="flex aspect-video min-h-[280px] items-center justify-center bg-bg px-7 py-8">
-                  <div className="flex flex-col items-center gap-4 text-center">
-                    {/* The ring breathes so the frame reads as waiting for a
-                        recording rather than as a broken embed. */}
-                    <span className="relative flex h-14 w-14 items-center justify-center rounded-full border border-line-strong bg-surface text-[color:var(--td-accent)]">
-                      <span
-                        aria-hidden="true"
-                        className="absolute inset-0 rounded-full border border-[color:var(--td-accent)] [animation:td-ping_2.4s_cubic-bezier(0,0,0.2,1)_infinite]"
-                      />
-                      <Play
-                        className="ml-0.5 h-5 w-5"
-                        fill="currentColor"
-                        strokeWidth={0}
-                      />
-                    </span>
-                    <span className="font-mono text-[13px] text-faint">
-                      demo recording — coming soon
-                    </span>
-                    <p className="m-0 max-w-[420px] text-[14px] leading-[1.6] text-muted text-pretty">
-                      {product.demo.note}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      {/* Demo section parked, not deleted: the `demo` copy stays in
+          lib/products.tsx so restoring it is a revert, not a rewrite. The
+          screenshot under the hero stands in for it. */}
 
       {/* What is <product> */}
       <section id="about" className="border-t border-line bg-surface">
