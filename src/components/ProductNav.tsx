@@ -3,8 +3,8 @@ import Link from "next/link";
 
 /**
  * Nav for the product pages. Mirrors the landing Nav's geometry (60px tall,
- * 1060px container) but swaps the in-page anchor for a route back to the
- * studio, since a product page has no #products of its own.
+ * 1060px container). The wordmark is itself the route back to the studio, so
+ * there is no separate back link beside the CTA.
  */
 export default function ProductNav() {
   return (
@@ -20,23 +20,15 @@ export default function ProductNav() {
             priority
           />
         </Link>
-        {/* Same mobile rules as the landing nav: the button must never wrap. */}
-        <div className="flex items-center gap-4 sm:gap-[26px]">
-          <Link
-            href="/#products"
-            className="whitespace-nowrap text-[13px] text-muted transition-colors hover:text-ink"
-          >
-            ← termdx
-          </Link>
-          <a
-            href="https://cal.com/termdx.studio"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-[7px] whitespace-nowrap rounded-md border border-line-strong bg-surface px-3 py-[7px] text-[13px] text-ink transition-colors hover:border-ink sm:px-3.5"
-          >
-            Book a Call
-          </a>
-        </div>
+        {/* Same mobile rule as the landing nav: the button must never wrap. */}
+        <a
+          href="https://cal.com/termdx.studio"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex shrink-0 items-center gap-[7px] whitespace-nowrap rounded-md border border-line-strong bg-surface px-3 py-[7px] text-[13px] text-ink transition-colors hover:border-ink sm:px-3.5"
+        >
+          Book a Call
+        </a>
       </div>
     </nav>
   );
