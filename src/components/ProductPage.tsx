@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { Star } from "lucide-react";
 import FaqList from "./FaqList";
@@ -11,6 +12,7 @@ import ProductNav from "./ProductNav";
 import WaitlistButton from "./WaitlistButton";
 import Reveal from "./motion/Reveal";
 import type { Product } from "@/lib/products";
+import { SITE_URL } from "@/lib/seo";
 
 type Props = {
   product: Product;
@@ -38,16 +40,89 @@ export default function ProductPage({ product, displayFont }: Props) {
   // Per-page accent, the override globals.css documents.
   const accent = { "--td-accent": product.accent } as CSSProperties;
   const heading = `${displayFont} m-0 font-medium tracking-[-0.02em]`;
+  const canonical = `${SITE_URL}/${product.slug}`;
+
+  // Machine-readable page summary for search and answer engines: what the
+  // software is, the questions it answers, and where it sits in the site.
+  // Only plain-string fields feed it — `description` is a ReactNode and is
+  // never serialised. Sanitised per the Next JSON-LD guide.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        name: product.name,
+        url: canonical,
+        description: product.seoDescription ?? product.summary,
+        applicationCategory: "DeveloperApplication",
+        author: { "@id": `${SITE_URL}/#org` },
+        publisher: { "@id": `${SITE_URL}/#org` },
+        ...(product.repoUrl
+          ? {
+              offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+              codeRepository: product.repoUrl,
+            }
+          : {}),
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: product.faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "TermDX",
+            item: SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: product.name,
+            item: canonical,
+          },
+        ],
+      },
+    ],
+  };
+  const jsonLdText = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 
   return (
     <div style={accent} className="flex min-h-full flex-1 flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdText }}
+      />
       <ProductNav />
 
+      <main className="flex flex-1 flex-col">
       {/* Hero — animates on mount rather than on scroll, since it's already
           in view. Delays step the eye down the stack. */}
       <header
         className={`${SHELL} flex flex-col items-center pb-[88px] pt-24 text-center`}
       >
+        {/* Visible breadcrumb: internal linking for crawlers, orientation
+            for readers, and it matches the page's own FAQ JSON-LD above. */}
+        <Reveal immediate>
+          <nav
+            aria-label="Breadcrumb"
+            className="mb-7 font-mono text-[12.5px] text-faint"
+          >
+            <Link href="/" className="transition-colors hover:text-ink">
+              termdx
+            </Link>
+            <span aria-hidden="true"> / </span>
+            <span aria-current="page" className="text-muted">
+              {product.slug.toLowerCase()}
+            </span>
+          </nav>
+        </Reveal>
         {/* Mark and name read as one lockup. The mark is sized just above the
             heading's cap height so it leads without dwarfing it; a product
             without one simply centres the name. */}
@@ -309,6 +384,7 @@ export default function ProductPage({ product, displayFont }: Props) {
           </Reveal>
         </div>
       </section>
+      </main>
 
       <Footer currentSlug={product.slug} />
     </div>

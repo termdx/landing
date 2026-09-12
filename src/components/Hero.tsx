@@ -19,6 +19,12 @@ const ASCII = `▄▄▄▄▄▄▄▄▄                   ▄▄▄▄▄▄ 
 export default function Hero() {
   return (
     <header className="mx-auto flex max-w-[1060px] flex-col items-center px-7 pb-[88px] pt-24 text-center">
+      {/* The ASCII banner is the visual identity but carries no words, so the
+          page would otherwise ship without an h1. Screen-reader and crawler
+          only — sighted readers get the banner. */}
+      <h1 className="sr-only">
+        TermDX — Sharp tools for sharp developers
+      </h1>
       <Reveal immediate>
         <pre
           aria-hidden="true"
