@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "TermDX — Sharp tools for sharp developers",
+    name: "TermDX: Sharp tools for sharp developers",
     short_name: "TermDX",
     description:
       "Terminal-native developer tools. No Electron wrappers, no context switching, no leaving the command line.",

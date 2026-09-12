@@ -23,7 +23,7 @@ export default function Hero() {
           page would otherwise ship without an h1. Screen-reader and crawler
           only — sighted readers get the banner. */}
       <h1 className="sr-only">
-        TermDX — Sharp tools for sharp developers
+        TermDX: Sharp tools for sharp developers
       </h1>
       <Reveal immediate>
         <pre

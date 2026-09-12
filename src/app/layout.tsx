@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   // `template` lets product pages pass a plain string title and still get
   // the studio suffix — see productMetadata in lib/products.tsx.
   title: {
-    default: "TermDX — Sharp tools for sharp developers",
+    default: "TermDX: Sharp tools for sharp developers",
     template: "%s | TermDX",
   },
   description:
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "TermDX — Sharp tools for sharp developers",
+    title: "TermDX: Sharp tools for sharp developers",
     description:
       "Terminal-native developer tools. No Electron wrappers, no context switching, no leaving the command line.",
     url: "https://termdx.studio",
@@ -92,13 +92,13 @@ export const metadata: Metadata = {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "termdx.studio — the TermDX wordmark on the studio blue",
+        alt: "termdx.studio, the TermDX wordmark on the studio blue",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TermDX — Sharp tools for sharp developers",
+    title: "TermDX: Sharp tools for sharp developers",
     description:
       "Terminal-native developer tools. No Electron wrappers, no context switching, no leaving the command line.",
     images: [
@@ -106,7 +106,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "termdx.studio — the TermDX wordmark on the studio blue",
+        alt: "termdx.studio, the TermDX wordmark on the studio blue",
       },
     ],
   },
@@ -189,7 +189,7 @@ export default function RootLayout({
         <link
           rel="alternate"
           type="text/plain"
-          title="TermDX — plain-text site summary for LLMs"
+          title="TermDX plain-text site summary for LLMs"
           href="/llms.txt"
         />
         <script

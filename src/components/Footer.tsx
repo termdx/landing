@@ -17,17 +17,13 @@ const ASK_ICONS = {
 
 type Props = {
   /**
-   * Set on a product page. That product keeps its own entry; the rest are
-   * dropped, so the footer never hands a reader a route to a competing
-   * product from inside one. The Ask-AI prompt also narrows to this product.
+   * Set on a product page. Narrows the Ask-AI prompt to that product — the
+   * catalog below always lists everything, wherever the footer renders.
    */
   currentSlug?: string;
 };
 
 export default function Footer({ currentSlug }: Props) {
-  const shown = currentSlug
-    ? products.filter((product) => product.slug === currentSlug)
-    : products;
   // Prefilled assistant links: each opens with the question already asked,
   // grounded on this page's own canonical URL, so the answer cites us.
   const ask = askLinks(askPromptFor(currentSlug));
@@ -45,13 +41,13 @@ export default function Footer({ currentSlug }: Props) {
             </p>
           </div>
 
-          {/* The catalog is the most useful thing a footer can surface — the
-              old termdx.studio link just pointed at the page you were on.
-              Driven off `products` so a new one appears here for free. */}
+          {/* The catalog is the most useful thing a footer can surface — every
+              product, on every page, driven off `products` so a new one
+              appears here for free. */}
           <nav aria-label="Products">
             <p className={HEADING}>Products</p>
             <ul className="m-0 flex list-none flex-col gap-2 p-0">
-              {shown.map((product) => (
+              {products.map((product) => (
                 <li key={product.slug} className="m-0 p-0">
                   <Link
                     href={`/${product.slug}`}

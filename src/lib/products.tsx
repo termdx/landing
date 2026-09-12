@@ -562,8 +562,8 @@ export const productSlugs = products.map((product) => product.slug);
 
 export function productMetadata(product: Product): Metadata {
   // Plain string on purpose: the root layout's title.template appends
-  // "| TermDX", so the final <title> reads "piper — … | TermDX".
-  const title = `${product.name} — ${product.tagline}`;
+  // "| TermDX", so the final <title> reads "piper: … | TermDX".
+  const title = `${product.name}: ${product.tagline}`;
   const description = product.seoDescription ?? product.summary;
 
   return {
